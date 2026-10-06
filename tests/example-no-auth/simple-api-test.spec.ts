@@ -3,8 +3,9 @@ import { expect, test } from '@playwright/test'
 
 test('get product with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
-  const response = await request.get('https://shop.tl-academy.ee/api/products/1',
-    {ignoreHTTPSErrors:true})
+  const response = await request.get('https://shop.tl-academy.ee/api/products/1', {
+    ignoreHTTPSErrors: true,
+  })
 
   // parse raw response body to json
   const responseBody = await response.json()
@@ -23,7 +24,7 @@ test('get non-existing product should receive code 404', async ({ request }) => 
   })
 
   // parse raw response body to json
- // const responseBody = await response.json() nothing to transfer to body
+  // const responseBody = await response.json() nothing to transfer to body
   const statusCode = response.status()
 
   // Log the response status, body and headers
@@ -72,16 +73,18 @@ test('post product with correct data should receive code 201', async ({ request 
   expect(typeof responseBody.name).toBe('string')
   // check that body.price is number type
   expect(typeof responseBody.price).toBe('number')
-    //expect
+  //expect
 })
 
-test('post product with correct mandatory data and quantity should receive code 201', async ({ request }) => {
+test('post product with correct mandatory data and quantity should receive code 201', async ({
+  request,
+}) => {
   // prepare request body with only mandatory fields
   const requestBody = {
     name: 'Banana',
     category: 'Fruit',
-    price: 2.50,
-    quantity: 20 //optional fields set explicitly
+    price: 2.5,
+    quantity: 20, //optional fields set explicitly
   }
   // Send a POST request to the server
   const response = await request.post('https://shop.tl-academy.ee/api/products', {
@@ -104,13 +107,15 @@ test('post product with correct mandatory data and quantity should receive code 
   expect(responseBody.available).toBeTruthy()
 })
 
-test('Failed to create product with missing mandatory name should receive code 400', async ({ request }) => {
+test('Failed to create product with missing mandatory name should receive code 400', async ({
+  request,
+}) => {
   // prepare request body with only mandatory fields
   const requestBody = {
     //name: 'Banana',
     category: 'Fruit',
-    price: 2.50,
-    quantity: 20 //optional fields set explicitly
+    price: 2.5,
+    quantity: 20, //optional fields set explicitly
   }
   // Send a POST request to the server
   const response = await request.post('https://shop.tl-academy.ee/api/products', {
