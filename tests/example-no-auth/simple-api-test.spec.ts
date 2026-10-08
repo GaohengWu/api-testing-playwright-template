@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { expect, test } from '@playwright/test'
+import { ProductDto } from '../dto/product-dto'
 
 test('get product with correct id should receive code 200', async ({ request }) => {
   // Build and send a GET request to the server
@@ -107,16 +108,19 @@ test('post product with correct mandatory data and quantity should receive code 
   expect(responseBody.available).toBeTruthy()
 })
 
+
 test('Failed to create product with missing mandatory name should receive code 400', async ({
   request,
 }) => {
   // prepare request body with only mandatory fields
-  const requestBody = {
+  /*const requestBody = {
     //name: 'Banana',
     category: 'Fruit',
     price: 2.5,
     quantity: 20, //optional fields set explicitly
-  }
+  }*/
+
+  const requestBody = new ProductDto('Kiwi', '', 2.5, 25)
   // Send a POST request to the server
   const response = await request.post('https://shop.tl-academy.ee/api/products', {
     data: requestBody,
@@ -136,4 +140,24 @@ test('Failed to create product with missing mandatory name should receive code 4
   //expect(typeof responseBody.price).toBe('number')
   //expect(responseBody.quantity).toBe(20)
   //expect(responseBody.available).toBeTruthy()
+})
+
+test('Failed to create product with invalid price should receive code 400', async ({
+  request,
+}) => {
+
+
+  const requestBody = new ProductDto('', 'Fruit', 0, 25)
+  // Send a POST request to the server
+  const response = await request.post('https://shop.tl-academy.ee/api/products', {
+    data: requestBody,
+    ignoreHTTPSErrors: true,
+  })
+
+  const statusCode = response.status()
+
+  // Log the response status and body
+  console.log('response status:', statusCode)
+  //console.log('response body:', responseBody)
+  expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
 })
